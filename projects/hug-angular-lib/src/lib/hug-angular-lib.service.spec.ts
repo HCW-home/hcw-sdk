@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { HugAngularService } from './hug-angular.service';
+import { HugAngularLibService } from './hug-angular-lib.service';
 
-describe('HugAngularService', () => {
-  let service: HugAngularService;
+describe('HugAngularLibService', () => {
+  let service: HugAngularLibService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(HugAngularService);
+    service = TestBed.inject(HugAngularLibService);
   });
 
   it('should be created', () => {

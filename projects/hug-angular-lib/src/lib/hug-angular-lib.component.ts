@@ -1,16 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'lib-hug-angular',
+  selector: 'lib-hug-angular-lib',
   template: `
     <p>
-      hug-angular works!
-it works yay!!!
+      hug-angular-lib works!
     </p>
   `,
   styles: []
 })
-export class HugAngularComponent implements OnInit {
+export class HugAngularLibComponent implements OnInit {
 
   constructor() { }
 

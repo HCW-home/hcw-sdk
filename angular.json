@@ -3,38 +3,38 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "hug-angular": {
+    "hug-angular-lib": {
       "projectType": "library",
-      "root": "projects/hug-angular",
-      "sourceRoot": "projects/hug-angular/src",
+      "root": "projects/hug-angular-lib",
+      "sourceRoot": "projects/hug-angular-lib/src",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "projects/hug-angular/tsconfig.lib.json",
-            "project": "projects/hug-angular/ng-package.json"
+            "tsConfig": "projects/hug-angular-lib/tsconfig.lib.json",
+            "project": "projects/hug-angular-lib/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/hug-angular/tsconfig.lib.prod.json"
+              "tsConfig": "projects/hug-angular-lib/tsconfig.lib.prod.json"
             }
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/hug-angular/src/test.ts",
-            "tsConfig": "projects/hug-angular/tsconfig.spec.json",
-            "karmaConfig": "projects/hug-angular/karma.conf.js"
+            "main": "projects/hug-angular-lib/src/test.ts",
+            "tsConfig": "projects/hug-angular-lib/tsconfig.spec.json",
+            "karmaConfig": "projects/hug-angular-lib/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "projects/hug-angular/tsconfig.lib.json",
-              "projects/hug-angular/tsconfig.spec.json"
+              "projects/hug-angular-lib/tsconfig.lib.json",
+              "projects/hug-angular-lib/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -42,9 +42,11 @@
           }
         }
       }
-    }},
+    }
+
+  },
   "cli": {
     "analytics": false
   },
-  "defaultProject": "hug-angular"
+  "defaultProject": "hug-angular-lib"
 }

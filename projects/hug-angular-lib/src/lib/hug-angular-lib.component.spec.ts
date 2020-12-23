@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HugAngularComponent } from './hug-angular.component';
+import { HugAngularLibComponent } from './hug-angular-lib.component';
 
-describe('HugAngularComponent', () => {
-  let component: HugAngularComponent;
-  let fixture: ComponentFixture<HugAngularComponent>;
+describe('HugAngularLibComponent', () => {
+  let component: HugAngularLibComponent;
+  let fixture: ComponentFixture<HugAngularLibComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HugAngularComponent ]
+      declarations: [ HugAngularLibComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HugAngularComponent);
+    fixture = TestBed.createComponent(HugAngularLibComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

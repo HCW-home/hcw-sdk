@@ -19,6 +19,10 @@
       "hug-angular": [
         "dist/hug-angular/hug-angular",
         "dist/hug-angular"
+      ],
+      "hug-angular-lib": [
+        "dist/hug-angular-lib/hug-angular-lib",
+        "dist/hug-angular-lib"
       ]
     }
   },
