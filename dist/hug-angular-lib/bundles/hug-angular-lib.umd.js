@@ -252,7 +252,7 @@
         HugAngularLibComponent = __decorate([
             core.Component({
                 selector: 'lib-hug-angular-lib',
-                template: "\n    <p>\n      hug-angular-lib works\n    </p>\n  "
+                template: "\n    <p>\n      hug-angular-lib works!!\n    </p>\n  "
             })
         ], HugAngularLibComponent);
         return HugAngularLibComponent;
