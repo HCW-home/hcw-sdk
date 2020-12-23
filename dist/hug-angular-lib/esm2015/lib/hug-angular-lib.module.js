@@ -1,0 +1,14 @@
+import { __decorate } from "tslib";
+import { NgModule } from '@angular/core';
+import { HugAngularLibComponent } from './hug-angular-lib.component';
+let HugAngularLibModule = class HugAngularLibModule {
+};
+HugAngularLibModule = __decorate([
+    NgModule({
+        declarations: [HugAngularLibComponent],
+        imports: [],
+        exports: [HugAngularLibComponent]
+    })
+], HugAngularLibModule);
+export { HugAngularLibModule };
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaHVnLWFuZ3VsYXItbGliLm1vZHVsZS5qcyIsInNvdXJjZVJvb3QiOiJuZzovL2h1Zy1hbmd1bGFyLWxpYi8iLCJzb3VyY2VzIjpbImxpYi9odWctYW5ndWxhci1saWIubW9kdWxlLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7QUFBQSxPQUFPLEVBQUUsUUFBUSxFQUFFLE1BQU0sZUFBZSxDQUFDO0FBQ3pDLE9BQU8sRUFBRSxzQkFBc0IsRUFBRSxNQUFNLDZCQUE2QixDQUFDO0FBVXJFLElBQWEsbUJBQW1CLEdBQWhDLE1BQWEsbUJBQW1CO0NBQUksQ0FBQTtBQUF2QixtQkFBbUI7SUFOL0IsUUFBUSxDQUFDO1FBQ1IsWUFBWSxFQUFFLENBQUMsc0JBQXNCLENBQUM7UUFDdEMsT0FBTyxFQUFFLEVBQ1I7UUFDRCxPQUFPLEVBQUUsQ0FBQyxzQkFBc0IsQ0FBQztLQUNsQyxDQUFDO0dBQ1csbUJBQW1CLENBQUk7U0FBdkIsbUJBQW1CIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgTmdNb2R1bGUgfSBmcm9tICdAYW5ndWxhci9jb3JlJztcbmltcG9ydCB7IEh1Z0FuZ3VsYXJMaWJDb21wb25lbnQgfSBmcm9tICcuL2h1Zy1hbmd1bGFyLWxpYi5jb21wb25lbnQnO1xuXG5cblxuQE5nTW9kdWxlKHtcbiAgZGVjbGFyYXRpb25zOiBbSHVnQW5ndWxhckxpYkNvbXBvbmVudF0sXG4gIGltcG9ydHM6IFtcbiAgXSxcbiAgZXhwb3J0czogW0h1Z0FuZ3VsYXJMaWJDb21wb25lbnRdXG59KVxuZXhwb3J0IGNsYXNzIEh1Z0FuZ3VsYXJMaWJNb2R1bGUgeyB9XG4iXX0=
