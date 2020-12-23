@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
   selector: 'lib-hug-angular-lib',
   template: `
     <p>
-      hug-angular-lib works!
+      hug-angular-lib works
     </p>
   `,
   styles: []
@@ -14,6 +14,7 @@ export class HugAngularLibComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+
   }
 
 }
