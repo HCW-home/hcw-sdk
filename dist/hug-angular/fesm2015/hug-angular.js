@@ -22,7 +22,7 @@ HugAngularComponent = __decorate([
         selector: 'lib-hug-angular',
         template: `
     <p>
-      hug-angular works! shit fuck
+      hug-angular works!
 it works yay!!!
     </p>
   `

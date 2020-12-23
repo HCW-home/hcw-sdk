@@ -21,7 +21,7 @@ var HugAngularComponent = /** @class */ (function () {
     HugAngularComponent = __decorate([
         Component({
             selector: 'lib-hug-angular',
-            template: "\n    <p>\n      hug-angular works! shit fuck\nit works yay!!!\n    </p>\n  "
+            template: "\n    <p>\n      hug-angular works!\nit works yay!!!\n    </p>\n  "
         })
     ], HugAngularComponent);
     return HugAngularComponent;
