@@ -3,29 +3,22 @@
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^9.0.7",
-    "@angular/core": "^9.0.7"
+    "@angular/core": "^9.0.7",
+    "ngx-logger": "^4.1.9"
   },
   "main": "bundles/hug-angular-lib.umd.js",
   "module": "fesm5/hug-angular-lib.js",
-  "es2015_ivy_ngcc": "__ivy_ngcc__/fesm2015/hug-angular-lib.js",
   "es2015": "fesm2015/hug-angular-lib.js",
   "esm5": "esm5/hug-angular-lib.js",
   "esm2015": "esm2015/hug-angular-lib.js",
   "fesm5": "fesm5/hug-angular-lib.js",
-  "fesm2015_ivy_ngcc": "__ivy_ngcc__/fesm2015/hug-angular-lib.js",
   "fesm2015": "fesm2015/hug-angular-lib.js",
   "typings": "hug-angular-lib.d.ts",
-  "metadata": "hug-angular-lib.metadata.json",
   "sideEffects": false,
   "dependencies": {
     "tslib": "^1.10.0"
   },
-  "__processed_by_ivy_ngcc__": {
-    "es2015": "9.1.13",
-    "fesm2015": "9.1.13",
-    "typings": "9.1.13"
-  },
   "scripts": {
-    "prepublishOnly": "node --eval \"console.error('ERROR: Trying to publish a package that has been compiled by NGCC. This is not allowed.\\nPlease delete and rebuild the package, without compiling with NGCC, before attempting to publish.\\nNote that NGCC may have been run by importing this package into another project that is being built with Ivy enabled.\\n')\" && exit 1"
+    "prepublishOnly": "node --eval \"console.error('ERROR: Trying to publish a package that has been compiled by Ivy. This is not allowed.\\nPlease delete and rebuild the package, without compiling with Ivy, before attempting to publish.\\n')\" && exit 1"
   }
 }
