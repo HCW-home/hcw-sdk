@@ -2,12 +2,14 @@
   "name": "hug-angular-lib",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^9.0.7",
-    "@angular/core": "^9.0.7",
-    "tslib": "^1.10.0",
-    "ngx-logger": "^4.1.9"
+    "@angular/common": "~9.1.13",
+    "@angular/core": "~9.1.13",
+    "tslib": "^1.10.0"
   },
   "devDependencies": {
+    "ngx-logger": "^4.1.9"
+  },
+  "whitelistedNonPeerDependencies": {
     "ngx-logger": "^4.1.9"
   }
 }
