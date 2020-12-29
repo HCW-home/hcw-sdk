@@ -2,9 +2,15 @@
   "name": "hug-angular-lib",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^9.0.7",
-    "@angular/core": "^9.0.7",
-    "ngx-logger": "^4.1.9"
+    "@angular/common": "~9.1.13",
+    "@angular/core": "~9.1.13"
+  },
+  "dependencies": {
+    "ngx-logger": "^4.1.9",
+    "platform": "^1.3.6",
+    "sails.io.js": "^1.2.1",
+    "socket.io-client": "^3.0.4",
+    "tslib": "^1.10.0"
   },
   "main": "bundles/hug-angular-lib.umd.js",
   "module": "fesm5/hug-angular-lib.js",
@@ -15,9 +21,6 @@
   "fesm2015": "fesm2015/hug-angular-lib.js",
   "typings": "hug-angular-lib.d.ts",
   "sideEffects": false,
-  "dependencies": {
-    "tslib": "^1.10.0"
-  },
   "scripts": {
     "prepublishOnly": "node --eval \"console.error('ERROR: Trying to publish a package that has been compiled by Ivy. This is not allowed.\\nPlease delete and rebuild the package, without compiling with Ivy, before attempting to publish.\\n')\" && exit 1"
   }

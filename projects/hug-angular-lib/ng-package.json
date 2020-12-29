@@ -3,5 +3,12 @@
   "dest": "../../dist/hug-angular-lib",
   "lib": {
     "entryFile": "src/public-api.ts"
-  }
+  },
+  "whitelistedNonPeerDependencies": [
+    "tslib",
+    "ngx-logger",
+    "sails.io.js",
+    "socket.io-client",
+    "platform"
+  ]
 }

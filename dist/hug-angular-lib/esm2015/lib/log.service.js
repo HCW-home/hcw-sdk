@@ -1,0 +1,11 @@
+// import { Injectable } from '@angular/core';
+export { NGXLogger as LogService } from 'ngx-logger';
+// @Injectable({
+//   providedIn: 'root'
+// })
+// export class LogService extends NGXLogger {
+//   constructor() {
+//     super()
+//   }
+// }
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoibG9nLnNlcnZpY2UuanMiLCJzb3VyY2VSb290Ijoibmc6Ly9odWctYW5ndWxhci1saWIvIiwic291cmNlcyI6WyJsaWIvbG9nLnNlcnZpY2UudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsOENBQThDO0FBQzlDLE9BQU8sRUFBRSxTQUFTLElBQUksVUFBVSxFQUFFLE1BQU0sWUFBWSxDQUFDO0FBRXJELGdCQUFnQjtBQUNoQix1QkFBdUI7QUFDdkIsS0FBSztBQUNMLDhDQUE4QztBQUU5QyxvQkFBb0I7QUFDcEIsY0FBYztBQUNkLE1BQU07QUFDTixJQUFJIiwic291cmNlc0NvbnRlbnQiOlsiLy8gaW1wb3J0IHsgSW5qZWN0YWJsZSB9IGZyb20gJ0Bhbmd1bGFyL2NvcmUnO1xuZXhwb3J0IHsgTkdYTG9nZ2VyIGFzIExvZ1NlcnZpY2UgfSBmcm9tICduZ3gtbG9nZ2VyJztcblxuLy8gQEluamVjdGFibGUoe1xuLy8gICBwcm92aWRlZEluOiAncm9vdCdcbi8vIH0pXG4vLyBleHBvcnQgY2xhc3MgTG9nU2VydmljZSBleHRlbmRzIE5HWExvZ2dlciB7XG5cbi8vICAgY29uc3RydWN0b3IoKSB7XG4vLyAgICAgc3VwZXIoKVxuLy8gICB9XG4vLyB9XG4iXX0=
