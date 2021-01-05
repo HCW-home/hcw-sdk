@@ -24,12 +24,15 @@
         "dist/hug-angular-lib/hug-angular-lib",
         "dist/hug-angular-lib"
       ]
-    }
+    },
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
+
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true,
     "enableIvy": true
-  }
+  },
 
 }

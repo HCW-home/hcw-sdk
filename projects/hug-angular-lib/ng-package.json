@@ -9,6 +9,8 @@
     "ngx-logger",
     "sails.io.js",
     "socket.io-client",
-    "platform"
+    "platform",
+    "mediasoup-client",
+    "bowser"
   ]
 }

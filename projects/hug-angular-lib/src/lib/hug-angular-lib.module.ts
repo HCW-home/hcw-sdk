@@ -7,7 +7,7 @@ console.log('NGX logger')
 @NgModule({
   declarations: [HugAngularLibComponent],
   imports: [
-    LoggerModule.forRoot({serverLoggingUrl: '/api/logs', level: NgxLoggerLevel.DEBUG, serverLogLevel: NgxLoggerLevel.ERROR})
+    LoggerModule.forRoot({ level: NgxLoggerLevel.DEBUG})
   ],
   providers:[LogService],
   exports: [HugAngularLibComponent]
