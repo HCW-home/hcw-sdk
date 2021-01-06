@@ -35,7 +35,7 @@ export class SignalingService  {
   peerId: string;
   roomId: string;
   _signalingSocket: Socket;
-  _signalingBaseUrl = 'wss://localhost';
+  _signalingBaseUrl = 'wss://conferences.iabsis.com';
   _signalingUrl: string;
   _closed = false;
 
