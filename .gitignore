@@ -9,6 +9,7 @@
 .vscode
 # dependencies
 /node_modules
+/dist/hug-angular-lib/node_modules
 /projects/hug-angular-lib/node_modules
 # profiling files
 chrome-profiler-events*.json

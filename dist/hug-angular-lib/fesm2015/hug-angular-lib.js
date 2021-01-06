@@ -102,7 +102,7 @@ class SocketTimeoutError extends Error {
 class SignalingService {
     constructor(logger) {
         this.logger = logger;
-        this._signalingBaseUrl = 'wss://localhost';
+        this._signalingBaseUrl = 'wss://conferences.iabsis.com';
         this._closed = false;
         this.onDisconnected = new Subject();
         this.onReconnecting = new Subject();
