@@ -27,7 +27,9 @@
     "socket.io-client": "^3.0.4",
     "tslib": "^2.0.3",
     "wolfy87-eventemitter": "^5.2.9",
-    "zone.js": "~0.10.2"
+    "zone.js": "~0.10.2",
+    "bowser": "^2.11.0",
+    "mediasoup-client": "^3.6.26"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.901.13",
