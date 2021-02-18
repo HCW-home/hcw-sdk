@@ -102,7 +102,7 @@ class SocketTimeoutError extends Error {
 class SignalingService {
     constructor(logger) {
         this.logger = logger;
-        this._signalingBaseUrl = 'wss://conferences.iabsis.com';
+        this._signalingBaseUrl = 'wss://mediasoup-test.oniabsis.com';
         this._closed = false;
         this.onDisconnected = new Subject();
         this.onReconnecting = new Subject();
@@ -111,6 +111,7 @@ class SignalingService {
         this.onNotification = new Subject();
     }
     init(roomId, peerId) {
+        this._closed = false;
         this._signalingUrl =
             `${this._signalingBaseUrl}/?roomId=${roomId}&peerId=${peerId}`;
         this._signalingSocket = io(this._signalingUrl);
@@ -155,7 +156,7 @@ class SignalingService {
             }
         }));
         this._signalingSocket.on('notification', (notification) => {
-            this.logger.debug('socket "notification" event [method:"%s", data:"%o"]', notification.method, notification.data);
+            this.logger.debug('socket> "notification" event [method:"%s", data:"%o"]', notification.method, notification.data);
             this.onNotification.next(notification);
         });
     }
@@ -165,6 +166,7 @@ class SignalingService {
         this._closed = true;
         this.logger.debug('close()');
         this._signalingSocket.close();
+        this._signalingSocket = null;
     }
     timeoutCallback(callback) {
         let called = false;
@@ -379,6 +381,7 @@ class RoomService {
         this._closed = false;
         this._produce = true;
         this._forceTcp = false;
+        this.subscriptions = [];
         this.onCamProducing = new Subject();
     }
     init({ peerId = null, produce = true, forceTcp = false, muted = false } = {}) {
@@ -387,6 +390,8 @@ class RoomService {
         // logger.debug(
         //   'constructor() [peerId: "%s", device: "%s", produce: "%s", forceTcp: "%s", displayName ""]',
         //   peerId, device.flag, produce, forceTcp);
+        this.logger.debug('INIT Room ', peerId);
+        this._closed = false;
         // Whether we should produce.
         this._produce = produce;
         // Whether we force TCP
@@ -434,6 +439,7 @@ class RoomService {
         // this._startDevicesListener();
     }
     close() {
+        this.logger.debug('close()', this._closed);
         if (this._closed)
             return;
         this._closed = true;
@@ -444,6 +450,9 @@ class RoomService {
             this._sendTransport.close();
         if (this._recvTransport)
             this._recvTransport.close();
+        this.subscriptions.forEach(subscription => {
+            subscription.unsubscribe();
+        });
     }
     // _startKeyListener() {
     //   // Add keydown event listener on document
@@ -1005,11 +1014,11 @@ class RoomService {
             // initialize signaling socket
             // listen to socket events
             this.signalingService.init(roomId, this._peerId);
-            this.signalingService.onDisconnected.subscribe(() => {
+            this.subscriptions.push(this.signalingService.onDisconnected.subscribe(() => {
                 // close
                 // this.close
-            });
-            this.signalingService.onReconnecting.subscribe(() => {
+            }));
+            this.subscriptions.push(this.signalingService.onReconnecting.subscribe(() => {
                 // close
                 if (this._webcamProducer) {
                     this._webcamProducer.close();
@@ -1033,8 +1042,8 @@ class RoomService {
                 }
                 this.remotePeersService.clearPeers();
                 // store.dispatch(roomActions.setRoomState('connecting'));
-            });
-            this.signalingService.onNewConsumer.pipe(switchMap((data) => __awaiter(this, void 0, void 0, function* () {
+            }));
+            this.subscriptions.push(this.signalingService.onNewConsumer.pipe(switchMap((data) => __awaiter(this, void 0, void 0, function* () {
                 const { peerId, producerId, id, kind, rtpParameters, type, appData, producerPaused } = data;
                 const consumer = yield this._recvTransport.consume({
                     id,
@@ -1069,8 +1078,8 @@ class RoomService {
                 //   }
                 // });
                 // }
-            }))).subscribe();
-            this.signalingService.onNotification.pipe(switchMap((notification) => __awaiter(this, void 0, void 0, function* () {
+            }))).subscribe());
+            this.subscriptions.push(this.signalingService.onNotification.pipe(switchMap((notification) => __awaiter(this, void 0, void 0, function* () {
                 this.logger.debug('socket "notification" event [method:"%s", data:"%o"]', notification.method, notification.data);
                 try {
                     switch (notification.method) {
@@ -1192,7 +1201,7 @@ class RoomService {
                     //     })
                     //   }));
                 }
-            }))).subscribe();
+            }))).subscribe());
             // on room ready join room _joinRoom
             // this._mediasoupDevice = new mediasoupClient.Device();
             // const routerRtpCapabilities =

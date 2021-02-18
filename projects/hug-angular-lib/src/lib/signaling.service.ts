@@ -35,7 +35,7 @@ export class SignalingService  {
   peerId: string;
   roomId: string;
   _signalingSocket: Socket;
-  _signalingBaseUrl = 'wss://conferences.iabsis.com';
+  _signalingBaseUrl = 'wss://mediasoup-test.oniabsis.com';
   _signalingUrl: string;
   _closed = false;
 
@@ -51,6 +51,7 @@ export class SignalingService  {
 
   init(roomId, peerId) {
 
+    this._closed = false;
     this._signalingUrl =
     `${this._signalingBaseUrl}/?roomId=${roomId}&peerId=${peerId}`;
     this._signalingSocket = io(this._signalingUrl)
@@ -130,7 +131,7 @@ export class SignalingService  {
 
     this._signalingSocket.on('notification', (notification) => {
       this.logger.debug(
-        'socket "notification" event [method:"%s", data:"%o"]',
+        'socket> "notification" event [method:"%s", data:"%o"]',
         notification.method, notification.data);
 
       this.onNotification.next(notification)
@@ -149,6 +150,7 @@ export class SignalingService  {
     this.logger.debug('close()');
 
     this._signalingSocket.close();
+    this._signalingSocket = null;
 
 
   }

@@ -343,7 +343,7 @@
     var SignalingService = /** @class */ (function () {
         function SignalingService(logger) {
             this.logger = logger;
-            this._signalingBaseUrl = 'wss://conferences.iabsis.com';
+            this._signalingBaseUrl = 'wss://mediasoup-test.oniabsis.com';
             this._closed = false;
             this.onDisconnected = new rxjs.Subject();
             this.onReconnecting = new rxjs.Subject();
@@ -353,6 +353,7 @@
         }
         SignalingService.prototype.init = function (roomId, peerId) {
             var _this = this;
+            this._closed = false;
             this._signalingUrl =
                 this._signalingBaseUrl + "/?roomId=" + roomId + "&peerId=" + peerId;
             this._signalingSocket = socket_ioClient.io(this._signalingUrl);
@@ -400,7 +401,7 @@
                 });
             }); });
             this._signalingSocket.on('notification', function (notification) {
-                _this.logger.debug('socket "notification" event [method:"%s", data:"%o"]', notification.method, notification.data);
+                _this.logger.debug('socket> "notification" event [method:"%s", data:"%o"]', notification.method, notification.data);
                 _this.onNotification.next(notification);
             });
         };
@@ -410,6 +411,7 @@
             this._closed = true;
             this.logger.debug('close()');
             this._signalingSocket.close();
+            this._signalingSocket = null;
         };
         SignalingService.prototype.timeoutCallback = function (callback) {
             var called = false;
@@ -674,6 +676,7 @@
             this._closed = false;
             this._produce = true;
             this._forceTcp = false;
+            this.subscriptions = [];
             this.onCamProducing = new rxjs.Subject();
         }
         RoomService.prototype.init = function (_a) {
@@ -683,6 +686,8 @@
             // logger.debug(
             //   'constructor() [peerId: "%s", device: "%s", produce: "%s", forceTcp: "%s", displayName ""]',
             //   peerId, device.flag, produce, forceTcp);
+            this.logger.debug('INIT Room ', peerId);
+            this._closed = false;
             // Whether we should produce.
             this._produce = produce;
             // Whether we force TCP
@@ -730,6 +735,7 @@
             // this._startDevicesListener();
         };
         RoomService.prototype.close = function () {
+            this.logger.debug('close()', this._closed);
             if (this._closed)
                 return;
             this._closed = true;
@@ -740,6 +746,9 @@
                 this._sendTransport.close();
             if (this._recvTransport)
                 this._recvTransport.close();
+            this.subscriptions.forEach(function (subscription) {
+                subscription.unsubscribe();
+            });
         };
         // _startKeyListener() {
         //   // Add keydown event listener on document
@@ -1416,11 +1425,11 @@
                     // initialize signaling socket
                     // listen to socket events
                     this.signalingService.init(roomId, this._peerId);
-                    this.signalingService.onDisconnected.subscribe(function () {
+                    this.subscriptions.push(this.signalingService.onDisconnected.subscribe(function () {
                         // close
                         // this.close
-                    });
-                    this.signalingService.onReconnecting.subscribe(function () {
+                    }));
+                    this.subscriptions.push(this.signalingService.onReconnecting.subscribe(function () {
                         // close
                         if (_this._webcamProducer) {
                             _this._webcamProducer.close();
@@ -1444,8 +1453,8 @@
                         }
                         _this.remotePeersService.clearPeers();
                         // store.dispatch(roomActions.setRoomState('connecting'));
-                    });
-                    this.signalingService.onNewConsumer.pipe(operators.switchMap(function (data) { return __awaiter(_this, void 0, void 0, function () {
+                    }));
+                    this.subscriptions.push(this.signalingService.onNewConsumer.pipe(operators.switchMap(function (data) { return __awaiter(_this, void 0, void 0, function () {
                         var peerId, producerId, id, kind, rtpParameters, type, appData, producerPaused, consumer;
                         var _this = this;
                         return __generator(this, function (_a) {
@@ -1470,8 +1479,8 @@
                                     return [2 /*return*/];
                             }
                         });
-                    }); })).subscribe();
-                    this.signalingService.onNotification.pipe(operators.switchMap(function (notification) { return __awaiter(_this, void 0, void 0, function () {
+                    }); })).subscribe());
+                    this.subscriptions.push(this.signalingService.onNotification.pipe(operators.switchMap(function (notification) { return __awaiter(_this, void 0, void 0, function () {
                         var _a, _b, producerId, score, _c, id, displayName, picture, roles, peerId, consumerId, consumer, peerId, consumerId, consumer, consumerId, consumer, _d, consumerId, spatialLayer, temporalLayer, consumer, _e, consumerId, score, turnServers, error_10;
                         return __generator(this, function (_f) {
                             switch (_f.label) {
@@ -1617,7 +1626,7 @@
                                 case 17: return [2 /*return*/];
                             }
                         });
-                    }); })).subscribe();
+                    }); })).subscribe());
                     return [2 /*return*/];
                 });
             });

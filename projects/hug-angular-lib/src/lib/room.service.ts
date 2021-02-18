@@ -117,6 +117,7 @@ export  class RoomService {
   _useSimulcast
   _turnServers
 
+  subscriptions = [];
   public onCamProducing: Subject<any> = new Subject();
   constructor(
     private signalingService: SignalingService,
@@ -143,7 +144,9 @@ export  class RoomService {
 
 
 
+    this.logger.debug('INIT Room ', peerId)
 
+    this._closed = false;
     // Whether we should produce.
     this._produce = produce;
 
@@ -228,6 +231,8 @@ export  class RoomService {
 
   }
   close() {
+    this.logger.debug('close()', this._closed);
+
     if (this._closed)
       return;
 
@@ -244,6 +249,9 @@ export  class RoomService {
     if (this._recvTransport)
       this._recvTransport.close();
 
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe()
+    })
 
   }
 
@@ -1013,11 +1021,11 @@ export  class RoomService {
     // initialize signaling socket
     // listen to socket events
     this.signalingService.init(roomId, this._peerId)
-    this.signalingService.onDisconnected.subscribe( () => {
+   this.subscriptions.push(this.signalingService.onDisconnected.subscribe( () => {
       // close
       // this.close
-    })
-    this.signalingService.onReconnecting.subscribe( () => {
+    }))
+    this.subscriptions.push(this.signalingService.onReconnecting.subscribe( () => {
       // close
 
 
@@ -1061,9 +1069,9 @@ export  class RoomService {
 
 
 			// store.dispatch(roomActions.setRoomState('connecting'));
-    })
+    }))
 
-    this.signalingService.onNewConsumer.pipe(switchMap(async (data) => {
+    this.subscriptions.push(this.signalingService.onNewConsumer.pipe(switchMap(async (data) => {
       const {
         peerId,
         producerId,
@@ -1127,9 +1135,9 @@ export  class RoomService {
         // });
       // }
 
-    })).subscribe()
+    })).subscribe())
 
-    this.signalingService.onNotification.pipe(switchMap(async (notification) => {
+    this.subscriptions.push(this.signalingService.onNotification.pipe(switchMap(async (notification) => {
       this.logger.debug(
         'socket "notification" event [method:"%s", data:"%o"]',
         notification.method, notification.data);
@@ -1300,7 +1308,7 @@ export  class RoomService {
         //   }));
       }
 
-    })).subscribe()
+    })).subscribe())
     // on room ready join room _joinRoom
 
     // this._mediasoupDevice = new mediasoupClient.Device();

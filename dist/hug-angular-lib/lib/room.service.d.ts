@@ -30,6 +30,7 @@ export declare class RoomService {
     _consumers: any;
     _useSimulcast: any;
     _turnServers: any;
+    subscriptions: any[];
     onCamProducing: Subject<any>;
     constructor(signalingService: SignalingService, logger: LogService, remotePeersService: RemotePeersService);
     init({ peerId, produce, forceTcp, muted }?: {
