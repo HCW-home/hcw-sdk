@@ -61,10 +61,11 @@ export declare class RoomService {
     modifyPeerConsumer(peerId: any, type: any, mute: any): Promise<void>;
     _pauseConsumer(consumer: any): Promise<void>;
     _resumeConsumer(consumer: any): Promise<void>;
-    join({ roomId, joinVideo, joinAudio }: {
+    join({ roomId, joinVideo, joinAudio, token }: {
         roomId: any;
         joinVideo: any;
         joinAudio: any;
+        token: any;
     }): Promise<void>;
     _updateAudioDevices(): Promise<void>;
     _updateWebcams(): Promise<void>;

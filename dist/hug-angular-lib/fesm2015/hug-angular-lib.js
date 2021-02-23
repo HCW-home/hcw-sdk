@@ -110,10 +110,10 @@ class SignalingService {
         this.onNewConsumer = new Subject();
         this.onNotification = new Subject();
     }
-    init(roomId, peerId) {
+    init(token) {
         this._closed = false;
         this._signalingUrl =
-            `${this._signalingBaseUrl}/?roomId=${roomId}&peerId=${peerId}`;
+            `${this._signalingBaseUrl}/?token=${token}`;
         this._signalingSocket = io(this._signalingUrl);
         this.logger.debug("Initialize socket ", this._signalingUrl);
         this._signalingSocket.on('connect', () => {
@@ -1008,12 +1008,12 @@ class RoomService {
     //     logger.error('requestConsumerKeyFrame() [error:"%o"]', error);
     //   }
     // }
-    join({ roomId, joinVideo, joinAudio }) {
+    join({ roomId, joinVideo, joinAudio, token }) {
         return __awaiter(this, void 0, void 0, function* () {
             this._roomId = roomId;
             // initialize signaling socket
             // listen to socket events
-            this.signalingService.init(roomId, this._peerId);
+            this.signalingService.init(token);
             this.subscriptions.push(this.signalingService.onDisconnected.subscribe(() => {
                 // close
                 // this.close

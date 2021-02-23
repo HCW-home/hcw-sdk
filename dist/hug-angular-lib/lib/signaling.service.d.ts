@@ -22,7 +22,7 @@ export declare class SignalingService {
     onNewConsumer: Subject<any>;
     onNotification: Subject<any>;
     constructor(logger: LogService);
-    init(roomId: any, peerId: any): void;
+    init(token: any): void;
     close(): void;
     timeoutCallback(callback: any): (...args: any[]) => void;
     _sendRequest(method: any, data: any): Promise<unknown>;
