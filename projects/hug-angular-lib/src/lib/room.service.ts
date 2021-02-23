@@ -1012,7 +1012,7 @@ export  class RoomService {
 
 
 
-  async join({ roomId, joinVideo, joinAudio }) {
+  async join({ roomId, joinVideo, joinAudio, token }) {
 
 
     this._roomId = roomId;
@@ -1020,7 +1020,7 @@ export  class RoomService {
 
     // initialize signaling socket
     // listen to socket events
-    this.signalingService.init(roomId, this._peerId)
+    this.signalingService.init(token)
    this.subscriptions.push(this.signalingService.onDisconnected.subscribe( () => {
       // close
       // this.close

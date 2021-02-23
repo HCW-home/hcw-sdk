@@ -49,11 +49,11 @@ export class SignalingService  {
    }
 
 
-  init(roomId, peerId) {
+  init(token) {
 
     this._closed = false;
     this._signalingUrl =
-    `${this._signalingBaseUrl}/?roomId=${roomId}&peerId=${peerId}`;
+    `${this._signalingBaseUrl}/?token=${token}`;
     this._signalingSocket = io(this._signalingUrl)
     this.logger.debug("Initialize socket ", this._signalingUrl)
 
