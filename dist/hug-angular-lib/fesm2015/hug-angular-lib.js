@@ -1362,7 +1362,7 @@ class RoomService {
     }
     _joinRoom({ joinVideo, joinAudio }) {
         return __awaiter(this, void 0, void 0, function* () {
-            this.logger.debug('_joinRoom()');
+            this.logger.debug('_joinRoom() Device', this._device);
             const displayName = `Guest ${Math.floor(Math.random() * (100000 - 10000)) + 10000}`;
             try {
                 this._mediasoupDevice = new Device();

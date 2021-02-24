@@ -1651,7 +1651,7 @@ var RoomService = /** @class */ (function () {
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
-                        this.logger.debug('_joinRoom()');
+                        this.logger.debug('_joinRoom() Device', this._device);
                         displayName = "Guest " + (Math.floor(Math.random() * (100000 - 10000)) + 10000);
                         _c.label = 1;
                     case 1:
