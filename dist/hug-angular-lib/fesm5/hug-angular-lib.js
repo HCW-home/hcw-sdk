@@ -1656,7 +1656,7 @@ var RoomService = /** @class */ (function () {
                         _c.label = 1;
                     case 1:
                         _c.trys.push([1, 11, , 12]);
-                        this._mediasoupDevice = new Device();
+                        this._mediasoupDevice = new Device({ handlerName: 'Safari12' });
                         return [4 /*yield*/, this.signalingService.sendRequest('getRouterRtpCapabilities')];
                     case 2:
                         routerRtpCapabilities = _c.sent();
