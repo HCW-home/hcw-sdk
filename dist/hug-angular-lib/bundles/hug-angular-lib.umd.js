@@ -343,7 +343,6 @@
     var SignalingService = /** @class */ (function () {
         function SignalingService(logger) {
             this.logger = logger;
-            this._signalingBaseUrl = 'wss://mediasoup-test.oniabsis.com';
             this._closed = false;
             this.onDisconnected = new rxjs.Subject();
             this.onReconnecting = new rxjs.Subject();
@@ -354,9 +353,8 @@
         SignalingService.prototype.init = function (token) {
             var _this = this;
             this._closed = false;
-            this._signalingUrl =
-                this._signalingBaseUrl + "/?token=" + token;
-            this._signalingSocket = socket_ioClient.io(this._signalingUrl);
+            this._signalingUrl;
+            this._signalingSocket = socket_ioClient.io(token);
             this.logger.debug("Initialize socket ", this._signalingUrl);
             this._signalingSocket.on('connect', function () {
                 _this.logger.debug('signaling Peer "connect" event');

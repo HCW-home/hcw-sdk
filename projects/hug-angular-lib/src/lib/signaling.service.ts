@@ -35,7 +35,6 @@ export class SignalingService  {
   peerId: string;
   roomId: string;
   _signalingSocket: Socket;
-  _signalingBaseUrl = 'wss://mediasoup-test.oniabsis.com';
   _signalingUrl: string;
   _closed = false;
 
@@ -52,9 +51,8 @@ export class SignalingService  {
   init(token) {
 
     this._closed = false;
-    this._signalingUrl =
-    `${this._signalingBaseUrl}/?token=${token}`;
-    this._signalingSocket = io(this._signalingUrl)
+    this._signalingUrl;
+    this._signalingSocket = io(token)
     this.logger.debug("Initialize socket ", this._signalingUrl)
 
 

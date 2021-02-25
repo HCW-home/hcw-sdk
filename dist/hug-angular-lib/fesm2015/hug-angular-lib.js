@@ -102,7 +102,6 @@ class SocketTimeoutError extends Error {
 class SignalingService {
     constructor(logger) {
         this.logger = logger;
-        this._signalingBaseUrl = 'wss://mediasoup-test.oniabsis.com';
         this._closed = false;
         this.onDisconnected = new Subject();
         this.onReconnecting = new Subject();
@@ -112,9 +111,8 @@ class SignalingService {
     }
     init(token) {
         this._closed = false;
-        this._signalingUrl =
-            `${this._signalingBaseUrl}/?token=${token}`;
-        this._signalingSocket = io(this._signalingUrl);
+        this._signalingUrl;
+        this._signalingSocket = io(token);
         this.logger.debug("Initialize socket ", this._signalingUrl);
         this._signalingSocket.on('connect', () => {
             this.logger.debug('signaling Peer "connect" event');

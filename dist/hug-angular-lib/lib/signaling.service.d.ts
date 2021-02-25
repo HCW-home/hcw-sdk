@@ -13,7 +13,6 @@ export declare class SignalingService {
     peerId: string;
     roomId: string;
     _signalingSocket: Socket;
-    _signalingBaseUrl: string;
     _signalingUrl: string;
     _closed: boolean;
     onDisconnected: Subject<any>;
