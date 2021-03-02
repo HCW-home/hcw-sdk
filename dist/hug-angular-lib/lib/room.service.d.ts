@@ -32,6 +32,7 @@ export declare class RoomService {
     _turnServers: any;
     subscriptions: any[];
     onCamProducing: Subject<any>;
+    onVolumeChange: Subject<any>;
     constructor(signalingService: SignalingService, logger: LogService, remotePeersService: RemotePeersService);
     init({ peerId, produce, forceTcp, muted }?: {
         peerId?: any;
@@ -43,6 +44,8 @@ export declare class RoomService {
     _startDevicesListener(): void;
     muteMic(): Promise<void>;
     unmuteMic(): Promise<void>;
+    disconnectLocalHark(): void;
+    connectLocalHark(track: any): void;
     changeAudioOutputDevice(deviceId: any): Promise<void>;
     updateMic({ start, restart, newDeviceId }?: {
         start?: boolean;

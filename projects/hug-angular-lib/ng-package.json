@@ -11,6 +11,7 @@
     "socket.io-client",
     "platform",
     "mediasoup-client",
-    "bowser"
+    "bowser",
+    "hark"
   ]
 }

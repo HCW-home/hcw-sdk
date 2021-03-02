@@ -6,6 +6,7 @@ import { Subject, BehaviorSubject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import bowser from 'bowser';
 import { Device } from 'mediasoup-client';
+import hark from 'hark';
 import { io } from 'socket.io-client';
 
 class HugAngularLibComponent {
@@ -381,6 +382,7 @@ class RoomService {
         this._forceTcp = false;
         this.subscriptions = [];
         this.onCamProducing = new Subject();
+        this.onVolumeChange = new Subject();
     }
     init({ peerId = null, produce = true, forceTcp = false, muted = false } = {}) {
         if (!peerId)
@@ -603,6 +605,75 @@ class RoomService {
             }
         });
     }
+    disconnectLocalHark() {
+        this.logger.debug('disconnectLocalHark()');
+        if (this._harkStream != null) {
+            let [track] = this._harkStream.getAudioTracks();
+            track.stop();
+            track = null;
+            this._harkStream = null;
+        }
+        if (this._hark != null)
+            this._hark.stop();
+    }
+    connectLocalHark(track) {
+        this.logger.debug('connectLocalHark() [track:"%o"]', track);
+        this._harkStream = new MediaStream();
+        const newTrack = track.clone();
+        this._harkStream.addTrack(newTrack);
+        newTrack.enabled = true;
+        this._hark = hark(this._harkStream, {
+            play: false,
+            interval: 10,
+            threshold: -50,
+            history: 100
+        });
+        this._hark.lastVolume = -100;
+        this._hark.on('volume_change', (volume) => {
+            // Update only if there is a bigger diff
+            if (this._micProducer && Math.abs(volume - this._hark.lastVolume) > 0.5) {
+                // Decay calculation: keep in mind that volume range is -100 ... 0 (dB)
+                // This makes decay volume fast if difference to last saved value is big
+                // and slow for small changes. This prevents flickering volume indicator
+                // at low levels
+                if (volume < this._hark.lastVolume) {
+                    volume =
+                        this._hark.lastVolume -
+                            Math.pow((volume - this._hark.lastVolume) /
+                                (100 + this._hark.lastVolume), 2) * 10;
+                }
+                this._hark.lastVolume = volume;
+                // console.log('VOLUME CHANGE HARK');
+                // this.onVolumeChange.next({peer:this._peerId, volume})
+                // store.dispatch(peerVolumeActions.setPeerVolume(this._peerId, volume));
+            }
+        });
+        // this._hark.on('speaking', () =>
+        // {
+        // 	store.dispatch(meActions.setIsSpeaking(true));
+        // 	if (
+        // 		(store.getState().settings.voiceActivatedUnmute ||
+        // 		store.getState().me.isAutoMuted) &&
+        // 		this._micProducer &&
+        // 		this._micProducer.paused
+        // 	)
+        // 		this._micProducer.resume();
+        // 	store.dispatch(meActions.setAutoMuted(false)); // sanity action
+        // });
+        // this._hark.on('stopped_speaking', () =>
+        // {
+        // 	store.dispatch(meActions.setIsSpeaking(false));
+        // 	if (
+        // 		store.getState().settings.voiceActivatedUnmute &&
+        // 		this._micProducer &&
+        // 		!this._micProducer.paused
+        // 	)
+        // 	{
+        // 		this._micProducer.pause();
+        // 		store.dispatch(meActions.setAutoMuted(true));
+        // 	}
+        // });
+    }
     changeAudioOutputDevice(deviceId) {
         return __awaiter(this, void 0, void 0, function* () {
             this.logger.debug('changeAudioOutputDevice() [deviceId:"%s"]', deviceId);
@@ -706,7 +777,7 @@ class RoomService {
                         this.disableMic();
                     });
                     this._micProducer.volume = 0;
-                    // this.connectLocalHark(track);
+                    this.connectLocalHark(track);
                 }
                 else if (this._micProducer) {
                     ({ track } = this._micProducer);
@@ -1179,6 +1250,15 @@ class RoomService {
                                 // store.dispatch(roomActions.toggleJoined());
                                 // store.dispatch(roomActions.setInLobby(false));
                                 yield this._joinRoom({ joinVideo, joinAudio });
+                                break;
+                            }
+                        case 'activeSpeaker':
+                            {
+                                const { peerId } = notification.data;
+                                if (peerId === this._peerId) {
+                                    this.onVolumeChange.next(notification.data);
+                                }
+                                // this._spotlights.handleActiveSpeaker(peerId);
                                 break;
                             }
                         default:

@@ -1,10 +1,11 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('ngx-logger'), require('rxjs'), require('rxjs/operators'), require('bowser'), require('mediasoup-client'), require('socket.io-client')) :
-    typeof define === 'function' && define.amd ? define('hug-angular-lib', ['exports', '@angular/core', 'ngx-logger', 'rxjs', 'rxjs/operators', 'bowser', 'mediasoup-client', 'socket.io-client'], factory) :
-    (global = global || self, factory(global['hug-angular-lib'] = {}, global.ng.core, global.ngxLogger, global.rxjs, global.rxjs.operators, global.bowser, global.mediasoupClient, global.socket_ioClient));
-}(this, (function (exports, core, ngxLogger, rxjs, operators, bowser, mediasoupClient, socket_ioClient) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('ngx-logger'), require('rxjs'), require('rxjs/operators'), require('bowser'), require('mediasoup-client'), require('hark'), require('socket.io-client')) :
+    typeof define === 'function' && define.amd ? define('hug-angular-lib', ['exports', '@angular/core', 'ngx-logger', 'rxjs', 'rxjs/operators', 'bowser', 'mediasoup-client', 'hark', 'socket.io-client'], factory) :
+    (global = global || self, factory(global['hug-angular-lib'] = {}, global.ng.core, global.ngxLogger, global.rxjs, global.rxjs.operators, global.bowser, global.mediasoupClient, global.hark, global.socket_ioClient));
+}(this, (function (exports, core, ngxLogger, rxjs, operators, bowser, mediasoupClient, hark, socket_ioClient) { 'use strict';
 
     bowser = bowser && Object.prototype.hasOwnProperty.call(bowser, 'default') ? bowser['default'] : bowser;
+    hark = hark && Object.prototype.hasOwnProperty.call(hark, 'default') ? hark['default'] : hark;
 
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation.
@@ -676,6 +677,7 @@
             this._forceTcp = false;
             this.subscriptions = [];
             this.onCamProducing = new rxjs.Subject();
+            this.onVolumeChange = new rxjs.Subject();
         }
         RoomService.prototype.init = function (_a) {
             var _b = _a === void 0 ? {} : _a, _c = _b.peerId, peerId = _c === void 0 ? null : _c, _d = _b.produce, produce = _d === void 0 ? true : _d, _e = _b.forceTcp, forceTcp = _e === void 0 ? false : _e, _f = _b.muted, muted = _f === void 0 ? false : _f;
@@ -904,6 +906,76 @@
                 });
             });
         };
+        RoomService.prototype.disconnectLocalHark = function () {
+            this.logger.debug('disconnectLocalHark()');
+            if (this._harkStream != null) {
+                var _a = __read(this._harkStream.getAudioTracks(), 1), track = _a[0];
+                track.stop();
+                track = null;
+                this._harkStream = null;
+            }
+            if (this._hark != null)
+                this._hark.stop();
+        };
+        RoomService.prototype.connectLocalHark = function (track) {
+            var _this = this;
+            this.logger.debug('connectLocalHark() [track:"%o"]', track);
+            this._harkStream = new MediaStream();
+            var newTrack = track.clone();
+            this._harkStream.addTrack(newTrack);
+            newTrack.enabled = true;
+            this._hark = hark(this._harkStream, {
+                play: false,
+                interval: 10,
+                threshold: -50,
+                history: 100
+            });
+            this._hark.lastVolume = -100;
+            this._hark.on('volume_change', function (volume) {
+                // Update only if there is a bigger diff
+                if (_this._micProducer && Math.abs(volume - _this._hark.lastVolume) > 0.5) {
+                    // Decay calculation: keep in mind that volume range is -100 ... 0 (dB)
+                    // This makes decay volume fast if difference to last saved value is big
+                    // and slow for small changes. This prevents flickering volume indicator
+                    // at low levels
+                    if (volume < _this._hark.lastVolume) {
+                        volume =
+                            _this._hark.lastVolume -
+                                Math.pow((volume - _this._hark.lastVolume) /
+                                    (100 + _this._hark.lastVolume), 2) * 10;
+                    }
+                    _this._hark.lastVolume = volume;
+                    // console.log('VOLUME CHANGE HARK');
+                    // this.onVolumeChange.next({peer:this._peerId, volume})
+                    // store.dispatch(peerVolumeActions.setPeerVolume(this._peerId, volume));
+                }
+            });
+            // this._hark.on('speaking', () =>
+            // {
+            // 	store.dispatch(meActions.setIsSpeaking(true));
+            // 	if (
+            // 		(store.getState().settings.voiceActivatedUnmute ||
+            // 		store.getState().me.isAutoMuted) &&
+            // 		this._micProducer &&
+            // 		this._micProducer.paused
+            // 	)
+            // 		this._micProducer.resume();
+            // 	store.dispatch(meActions.setAutoMuted(false)); // sanity action
+            // });
+            // this._hark.on('stopped_speaking', () =>
+            // {
+            // 	store.dispatch(meActions.setIsSpeaking(false));
+            // 	if (
+            // 		store.getState().settings.voiceActivatedUnmute &&
+            // 		this._micProducer &&
+            // 		!this._micProducer.paused
+            // 	)
+            // 	{
+            // 		this._micProducer.pause();
+            // 		store.dispatch(meActions.setAutoMuted(true));
+            // 	}
+            // });
+        };
         RoomService.prototype.changeAudioOutputDevice = function (deviceId) {
             return __awaiter(this, void 0, void 0, function () {
                 var device, error_3;
@@ -1026,6 +1098,7 @@
                                 _this.disableMic();
                             });
                             this._micProducer.volume = 0;
+                            this.connectLocalHark(track);
                             return [3 /*break*/, 11];
                         case 7:
                             if (!this._micProducer) return [3 /*break*/, 11];
@@ -1479,14 +1552,14 @@
                         });
                     }); })).subscribe());
                     this.subscriptions.push(this.signalingService.onNotification.pipe(operators.switchMap(function (notification) { return __awaiter(_this, void 0, void 0, function () {
-                        var _a, _b, producerId, score, _c, id, displayName, picture, roles, peerId, consumerId, consumer, peerId, consumerId, consumer, consumerId, consumer, _d, consumerId, spatialLayer, temporalLayer, consumer, _e, consumerId, score, turnServers, error_10;
+                        var _a, _b, producerId, score, _c, id, displayName, picture, roles, peerId, consumerId, consumer, peerId, consumerId, consumer, consumerId, consumer, _d, consumerId, spatialLayer, temporalLayer, consumer, _e, consumerId, score, turnServers, peerId, error_10;
                         return __generator(this, function (_f) {
                             switch (_f.label) {
                                 case 0:
                                     this.logger.debug('socket "notification" event [method:"%s", data:"%o"]', notification.method, notification.data);
                                     _f.label = 1;
                                 case 1:
-                                    _f.trys.push([1, 16, , 17]);
+                                    _f.trys.push([1, 17, , 18]);
                                     _a = notification.method;
                                     switch (_a) {
                                         case 'producerScore': return [3 /*break*/, 2];
@@ -1499,14 +1572,15 @@
                                         case 'consumerScore': return [3 /*break*/, 9];
                                         case 'roomBack': return [3 /*break*/, 10];
                                         case 'roomReady': return [3 /*break*/, 12];
+                                        case 'activeSpeaker': return [3 /*break*/, 14];
                                     }
-                                    return [3 /*break*/, 14];
+                                    return [3 /*break*/, 15];
                                 case 2:
                                     {
                                         _b = notification.data, producerId = _b.producerId, score = _b.score;
                                         // store.dispatch(
                                         //   producerActions.setProducerScore(producerId, score));
-                                        return [3 /*break*/, 15];
+                                        return [3 /*break*/, 16];
                                     }
                                     _f.label = 3;
                                 case 3:
@@ -1525,7 +1599,7 @@
                                         //       displayName
                                         //     })
                                         //   }));
-                                        return [3 /*break*/, 15];
+                                        return [3 /*break*/, 16];
                                     }
                                     _f.label = 4;
                                 case 4:
@@ -1534,7 +1608,7 @@
                                         this.remotePeersService.closePeer(peerId);
                                         // store.dispatch(
                                         //   peerActions.removePeer(peerId));
-                                        return [3 /*break*/, 15];
+                                        return [3 /*break*/, 16];
                                     }
                                     _f.label = 5;
                                 case 5:
@@ -1542,7 +1616,7 @@
                                         consumerId = notification.data.consumerId;
                                         consumer = this._consumers.get(consumerId);
                                         if (!consumer)
-                                            return [3 /*break*/, 15];
+                                            return [3 /*break*/, 16];
                                         consumer.close();
                                         if (consumer.hark != null)
                                             consumer.hark.stop();
@@ -1550,7 +1624,7 @@
                                         peerId = consumer.appData.peerId;
                                         // store.dispatch(
                                         //   consumerActions.removeConsumer(consumerId, peerId));
-                                        return [3 /*break*/, 15];
+                                        return [3 /*break*/, 16];
                                     }
                                     _f.label = 6;
                                 case 6:
@@ -1558,10 +1632,10 @@
                                         consumerId = notification.data.consumerId;
                                         consumer = this._consumers.get(consumerId);
                                         if (!consumer)
-                                            return [3 /*break*/, 15];
+                                            return [3 /*break*/, 16];
                                         // store.dispatch(
                                         //   consumerActions.setConsumerPaused(consumerId, 'remote'));
-                                        return [3 /*break*/, 15];
+                                        return [3 /*break*/, 16];
                                     }
                                     _f.label = 7;
                                 case 7:
@@ -1569,10 +1643,10 @@
                                         consumerId = notification.data.consumerId;
                                         consumer = this._consumers.get(consumerId);
                                         if (!consumer)
-                                            return [3 /*break*/, 15];
+                                            return [3 /*break*/, 16];
                                         // store.dispatch(
                                         //   consumerActions.setConsumerResumed(consumerId, 'remote'));
-                                        return [3 /*break*/, 15];
+                                        return [3 /*break*/, 16];
                                     }
                                     _f.label = 8;
                                 case 8:
@@ -1580,11 +1654,11 @@
                                         _d = notification.data, consumerId = _d.consumerId, spatialLayer = _d.spatialLayer, temporalLayer = _d.temporalLayer;
                                         consumer = this._consumers.get(consumerId);
                                         if (!consumer)
-                                            return [3 /*break*/, 15];
+                                            return [3 /*break*/, 16];
                                         this.remotePeersService.onConsumerLayerChanged(consumerId);
                                         // store.dispatch(consumerActions.setConsumerCurrentLayers(
                                         //   consumerId, spatialLayer, temporalLayer));
-                                        return [3 /*break*/, 15];
+                                        return [3 /*break*/, 16];
                                     }
                                     _f.label = 9;
                                 case 9:
@@ -1592,13 +1666,13 @@
                                         _e = notification.data, consumerId = _e.consumerId, score = _e.score;
                                         // store.dispatch(
                                         //   consumerActions.setConsumerScore(consumerId, score));
-                                        return [3 /*break*/, 15];
+                                        return [3 /*break*/, 16];
                                     }
                                     _f.label = 10;
                                 case 10: return [4 /*yield*/, this._joinRoom({ joinVideo: joinVideo, joinAudio: joinAudio })];
                                 case 11:
                                     _f.sent();
-                                    return [3 /*break*/, 15];
+                                    return [3 /*break*/, 16];
                                 case 12:
                                     turnServers = notification.data.turnServers;
                                     this._turnServers = turnServers;
@@ -1609,19 +1683,29 @@
                                     // store.dispatch(roomActions.toggleJoined());
                                     // store.dispatch(roomActions.setInLobby(false));
                                     _f.sent();
-                                    return [3 /*break*/, 15];
+                                    return [3 /*break*/, 16];
                                 case 14:
+                                    {
+                                        peerId = notification.data.peerId;
+                                        if (peerId === this._peerId) {
+                                            this.onVolumeChange.next(notification.data);
+                                        }
+                                        // this._spotlights.handleActiveSpeaker(peerId);
+                                        return [3 /*break*/, 16];
+                                    }
+                                    _f.label = 15;
+                                case 15:
                                     {
                                         // this.logger.error(
                                         //   'unknown notification.method "%s"', notification.method);
                                     }
-                                    _f.label = 15;
-                                case 15: return [3 /*break*/, 17];
-                                case 16:
+                                    _f.label = 16;
+                                case 16: return [3 /*break*/, 18];
+                                case 17:
                                     error_10 = _f.sent();
                                     this.logger.error('error on socket "notification" event [error:"%o"]', error_10);
-                                    return [3 /*break*/, 17];
-                                case 17: return [2 /*return*/];
+                                    return [3 /*break*/, 18];
+                                case 18: return [2 /*return*/];
                             }
                         });
                     }); })).subscribe());
