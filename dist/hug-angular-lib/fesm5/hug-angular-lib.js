@@ -513,6 +513,8 @@ var RoomService = /** @class */ (function () {
         this.subscriptions.forEach(function (subscription) {
             subscription.unsubscribe();
         });
+        this.disconnectLocalHark();
+        this.remotePeersService.clearPeers();
     };
     // _startKeyListener() {
     //   // Add keydown event listener on document
@@ -800,6 +802,7 @@ var RoomService = /** @class */ (function () {
                         _f = {}, _g = _f.sampleRate, sampleRate = _g === void 0 ? 96000 : _g, _h = _f.channelCount, channelCount = _h === void 0 ? 1 : _h, _j = _f.volume, volume = _j === void 0 ? 1.0 : _j, _k = _f.sampleSize, sampleSize = _k === void 0 ? 16 : _k, _l = _f.opusStereo, opusStereo = _l === void 0 ? false : _l, _m = _f.opusDtx, opusDtx = _m === void 0 ? true : _m, _o = _f.opusFec, opusFec = _o === void 0 ? true : _o, _p = _f.opusPtime, opusPtime = _p === void 0 ? 20 : _p, _q = _f.opusMaxPlaybackRate, opusMaxPlaybackRate = _q === void 0 ? 96000 : _q;
                         if (!((restart && this._micProducer) ||
                             start)) return [3 /*break*/, 7];
+                        this.disconnectLocalHark();
                         if (!this._micProducer) return [3 /*break*/, 4];
                         return [4 /*yield*/, this.disableMic()];
                     case 3:
@@ -1266,6 +1269,7 @@ var RoomService = /** @class */ (function () {
                 }));
                 this.subscriptions.push(this.signalingService.onReconnecting.subscribe(function () {
                     // close
+                    _this.logger.log('Reconnecting...');
                     if (_this._webcamProducer) {
                         _this._webcamProducer.close();
                         // store.dispatch(

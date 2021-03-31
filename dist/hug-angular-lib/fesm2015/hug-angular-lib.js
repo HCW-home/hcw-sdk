@@ -453,6 +453,8 @@ class RoomService {
         this.subscriptions.forEach(subscription => {
             subscription.unsubscribe();
         });
+        this.disconnectLocalHark();
+        this.remotePeersService.clearPeers();
     }
     // _startKeyListener() {
     //   // Add keydown event listener on document
@@ -723,7 +725,7 @@ class RoomService {
                 const { sampleRate = 96000, channelCount = 1, volume = 1.0, sampleSize = 16, opusStereo = false, opusDtx = true, opusFec = true, opusPtime = 20, opusMaxPlaybackRate = 96000 } = {};
                 if ((restart && this._micProducer) ||
                     start) {
-                    // this.disconnectLocalHark();
+                    this.disconnectLocalHark();
                     if (this._micProducer)
                         yield this.disableMic();
                     const stream = yield navigator.mediaDevices.getUserMedia({
@@ -1089,6 +1091,7 @@ class RoomService {
             }));
             this.subscriptions.push(this.signalingService.onReconnecting.subscribe(() => {
                 // close
+                this.logger.log('Reconnecting...');
                 if (this._webcamProducer) {
                     this._webcamProducer.close();
                     // store.dispatch(

@@ -255,6 +255,8 @@ export  class RoomService {
       subscription.unsubscribe()
     })
 
+    this.disconnectLocalHark()
+    this.remotePeersService.clearPeers()
   }
 
   // _startKeyListener() {
@@ -631,7 +633,7 @@ export  class RoomService {
         (restart && this._micProducer) ||
         start
       ) {
-        // this.disconnectLocalHark();
+        this.disconnectLocalHark();
 
         if (this._micProducer)
           await this.disableMic();
@@ -1128,7 +1130,7 @@ export  class RoomService {
     this.subscriptions.push(this.signalingService.onReconnecting.subscribe( () => {
       // close
 
-
+      this.logger.log('Reconnecting...')
 
 
 			if (this._webcamProducer)
