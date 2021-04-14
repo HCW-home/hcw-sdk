@@ -1666,7 +1666,8 @@ export  class RoomService {
     try {
 
 
-      this._mediasoupDevice = new mediasoupClient.Device({handlerName:'Safari12'});
+      // this._mediasoupDevice = new mediasoupClient.Device({handlerName:'Safari12'});
+      this._mediasoupDevice = new mediasoupClient.Device();
 
       const routerRtpCapabilities =
         await this.signalingService.sendRequest('getRouterRtpCapabilities');
@@ -1910,6 +1911,4 @@ export  class RoomService {
       version: browser.getBrowserVersion(),
       bowser: browser
     };
-
-  }
 }
