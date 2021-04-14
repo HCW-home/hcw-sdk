@@ -1911,4 +1911,5 @@ export  class RoomService {
       version: browser.getBrowserVersion(),
       bowser: browser
     };
+  }
 }
