@@ -1446,8 +1446,12 @@ class RoomService {
             this.logger.debug('_joinRoom() Device', this._device);
             const displayName = `Guest ${Math.floor(Math.random() * (100000 - 10000)) + 10000}`;
             try {
-                // this._mediasoupDevice = new mediasoupClient.Device({handlerName:'Safari12'});
-                this._mediasoupDevice = new Device();
+                if (this._device.bowser === 'safari') {
+                    this._mediasoupDevice = new Device({ handlerName: 'Safari12' });
+                }
+                else {
+                    this._mediasoupDevice = new Device();
+                }
                 const routerRtpCapabilities = yield this.signalingService.sendRequest('getRouterRtpCapabilities');
                 routerRtpCapabilities.headerExtensions = routerRtpCapabilities.headerExtensions
                     .filter((ext) => ext.uri !== 'urn:3gpp:video-orientation');
