@@ -935,7 +935,7 @@ var RoomService = /** @class */ (function () {
                         this.logger.debug('updateWebcam() [start:"%s", restart:"%s", newDeviceId:"%s", newResolution:"%s", newFrameRate:"%s"]', start, restart, newDeviceId, newResolution, newFrameRate);
                         _q.label = 1;
                     case 1:
-                        _q.trys.push([1, 21, , 22]);
+                        _q.trys.push([1, 23, , 24]);
                         if (!this._mediasoupDevice.canProduce('video'))
                             throw new Error('cannot produce video');
                         if (newDeviceId && !restart)
@@ -943,9 +943,15 @@ var RoomService = /** @class */ (function () {
                         videoMuted = false;
                         if (init && videoMuted)
                             return [2 /*return*/];
-                        return [4 /*yield*/, this._getWebcamDeviceId()];
-                    case 2:
+                        deviceId = void 0;
+                        if (!newDeviceId) return [3 /*break*/, 2];
+                        deviceId = newDeviceId;
+                        return [3 /*break*/, 4];
+                    case 2: return [4 /*yield*/, this._getWebcamDeviceId()];
+                    case 3:
                         deviceId = _q.sent();
+                        _q.label = 4;
+                    case 4:
                         device = this._webcams[newDeviceId || deviceId];
                         console.log('WEBCAMS ', this._webcams, device, deviceId);
                         if (!device)
@@ -953,20 +959,20 @@ var RoomService = /** @class */ (function () {
                         resolution = 'medium';
                         frameRate = 15;
                         if (!((restart && this._webcamProducer) ||
-                            start)) return [3 /*break*/, 10];
-                        if (!this._webcamProducer) return [3 /*break*/, 4];
+                            start)) return [3 /*break*/, 12];
+                        if (!this._webcamProducer) return [3 /*break*/, 6];
                         return [4 /*yield*/, this.disableWebcam()];
-                    case 3:
-                        _q.sent();
-                        _q.label = 4;
-                    case 4: return [4 /*yield*/, navigator.mediaDevices.getUserMedia({
-                            video: __assign(__assign({ deviceId: deviceId }, VIDEO_CONSTRAINS[resolution]), { frameRate: frameRate })
-                        })];
                     case 5:
+                        _q.sent();
+                        _q.label = 6;
+                    case 6: return [4 /*yield*/, navigator.mediaDevices.getUserMedia({
+                            video: __assign(__assign({ deviceId: { ideal: deviceId } }, VIDEO_CONSTRAINS[resolution]), { frameRate: frameRate })
+                        })];
+                    case 7:
                         stream = _q.sent();
                         (_o = __read(stream.getVideoTracks(), 1), track = _o[0]);
                         trackDeviceId = track.getSettings().deviceId;
-                        if (!this._useSimulcast) return [3 /*break*/, 7];
+                        if (!this._useSimulcast) return [3 /*break*/, 9];
                         firstVideoCodec = this._mediasoupDevice
                             .rtpCapabilities
                             .codecs
@@ -989,10 +995,10 @@ var RoomService = /** @class */ (function () {
                                     source: 'webcam'
                                 }
                             })];
-                    case 6:
+                    case 8:
                         _j._webcamProducer = _q.sent();
-                        return [3 /*break*/, 9];
-                    case 7:
+                        return [3 /*break*/, 11];
+                    case 9:
                         _k = this;
                         return [4 /*yield*/, this._sendTransport.produce({
                                 track: track,
@@ -1000,10 +1006,10 @@ var RoomService = /** @class */ (function () {
                                     source: 'webcam'
                                 }
                             })];
-                    case 8:
+                    case 10:
                         _k._webcamProducer = _q.sent();
-                        _q.label = 9;
-                    case 9:
+                        _q.label = 11;
+                    case 11:
                         webCamStream = new Stream();
                         webCamStream.setProducer(this._webcamProducer);
                         this.onCamProducing.next(webCamStream);
@@ -1021,45 +1027,45 @@ var RoomService = /** @class */ (function () {
                             //   }));
                             _this.disableWebcam();
                         });
-                        return [3 /*break*/, 19];
-                    case 10:
-                        if (!this._webcamProducer) return [3 /*break*/, 19];
+                        return [3 /*break*/, 21];
+                    case 12:
+                        if (!this._webcamProducer) return [3 /*break*/, 21];
                         (track = this._webcamProducer.track);
                         return [4 /*yield*/, track.applyConstraints(__assign(__assign({}, VIDEO_CONSTRAINS[resolution]), { frameRate: frameRate }))];
-                    case 11:
-                        _q.sent();
-                        _q.label = 12;
-                    case 12:
-                        _q.trys.push([12, 17, 18, 19]);
-                        _l = __values(this._extraVideoProducers.values()), _m = _l.next();
-                        _q.label = 13;
                     case 13:
-                        if (!!_m.done) return [3 /*break*/, 16];
+                        _q.sent();
+                        _q.label = 14;
+                    case 14:
+                        _q.trys.push([14, 19, 20, 21]);
+                        _l = __values(this._extraVideoProducers.values()), _m = _l.next();
+                        _q.label = 15;
+                    case 15:
+                        if (!!_m.done) return [3 /*break*/, 18];
                         producer = _m.value;
                         (track = producer.track);
                         return [4 /*yield*/, track.applyConstraints(__assign(__assign({}, VIDEO_CONSTRAINS[resolution]), { frameRate: frameRate }))];
-                    case 14:
+                    case 16:
                         _q.sent();
-                        _q.label = 15;
-                    case 15:
-                        _m = _l.next();
-                        return [3 /*break*/, 13];
-                    case 16: return [3 /*break*/, 19];
+                        _q.label = 17;
                     case 17:
+                        _m = _l.next();
+                        return [3 /*break*/, 15];
+                    case 18: return [3 /*break*/, 21];
+                    case 19:
                         e_1_1 = _q.sent();
                         e_1 = { error: e_1_1 };
-                        return [3 /*break*/, 19];
-                    case 18:
+                        return [3 /*break*/, 21];
+                    case 20:
                         try {
                             if (_m && !_m.done && (_p = _l.return)) _p.call(_l);
                         }
                         finally { if (e_1) throw e_1.error; }
                         return [7 /*endfinally*/];
-                    case 19: return [4 /*yield*/, this._updateWebcams()];
-                    case 20:
+                    case 21: return [4 /*yield*/, this._updateWebcams()];
+                    case 22:
                         _q.sent();
-                        return [3 /*break*/, 22];
-                    case 21:
+                        return [3 /*break*/, 24];
+                    case 23:
                         error_5 = _q.sent();
                         this.logger.error('updateWebcam() [error:"%o"]', error_5);
                         // store.dispatch(requestActions.notify(
@@ -1072,8 +1078,8 @@ var RoomService = /** @class */ (function () {
                         //   }));
                         if (track)
                             track.stop();
-                        return [3 /*break*/, 22];
-                    case 22: return [2 /*return*/];
+                        return [3 /*break*/, 24];
+                    case 24: return [2 /*return*/];
                 }
             });
         });

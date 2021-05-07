@@ -803,9 +803,16 @@ export  class RoomService {
 
       // store.dispatch(meActions.setWebcamInProgress(true));
 
-      const deviceId = await this._getWebcamDeviceId();
-      const device = this._webcams[deviceId];
+      let deviceId
+      if (newDeviceId) {
+        deviceId = newDeviceId
+      }else{
+        deviceId = await this._getWebcamDeviceId();
+      }
 
+      const device = this._webcams[newDeviceId || deviceId];
+
+      console.log('WEBCAMS ', this._webcams, device, deviceId)
       if (!device)
         throw new Error('no webcam devices');
 
