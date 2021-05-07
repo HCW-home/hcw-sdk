@@ -946,7 +946,8 @@ var RoomService = /** @class */ (function () {
                         return [4 /*yield*/, this._getWebcamDeviceId()];
                     case 2:
                         deviceId = _q.sent();
-                        device = this._webcams[deviceId];
+                        device = this._webcams[newDeviceId || deviceId];
+                        console.log('WEBCAMS ', this._webcams, device, deviceId);
                         if (!device)
                             throw new Error('no webcam devices');
                         resolution = 'medium';
@@ -959,7 +960,7 @@ var RoomService = /** @class */ (function () {
                         _q.sent();
                         _q.label = 4;
                     case 4: return [4 /*yield*/, navigator.mediaDevices.getUserMedia({
-                            video: __assign(__assign({ deviceId: { ideal: deviceId } }, VIDEO_CONSTRAINS[resolution]), { frameRate: frameRate })
+                            video: __assign(__assign({ deviceId: deviceId }, VIDEO_CONSTRAINS[resolution]), { frameRate: frameRate })
                         })];
                     case 5:
                         stream = _q.sent();

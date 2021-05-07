@@ -845,7 +845,8 @@ class RoomService {
                 // store.dispatch(settingsActions.setVideoMuted(false));
                 // store.dispatch(meActions.setWebcamInProgress(true));
                 const deviceId = yield this._getWebcamDeviceId();
-                const device = this._webcams[deviceId];
+                const device = this._webcams[newDeviceId || deviceId];
+                console.log('WEBCAMS ', this._webcams, device, deviceId);
                 if (!device)
                     throw new Error('no webcam devices');
                 const resolution = 'medium';
@@ -855,7 +856,7 @@ class RoomService {
                     if (this._webcamProducer)
                         yield this.disableWebcam();
                     const stream = yield navigator.mediaDevices.getUserMedia({
-                        video: Object.assign(Object.assign({ deviceId: { ideal: deviceId } }, VIDEO_CONSTRAINS[resolution]), { frameRate })
+                        video: Object.assign(Object.assign({ deviceId: deviceId }, VIDEO_CONSTRAINS[resolution]), { frameRate })
                     });
                     ([track] = stream.getVideoTracks());
                     const { deviceId: trackDeviceId } = track.getSettings();
