@@ -1975,7 +1975,7 @@
                             _c.label = 1;
                         case 1:
                             _c.trys.push([1, 11, , 12]);
-                            if (this._device.bowser === 'safari') {
+                            if (this._device.os === 'ios') {
                                 this._mediasoupDevice = new mediasoupClient.Device({ handlerName: 'Safari12' });
                             }
                             else {

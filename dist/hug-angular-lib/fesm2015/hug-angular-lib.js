@@ -1453,7 +1453,7 @@ class RoomService {
             this.logger.debug('_joinRoom() Device', this._device);
             const displayName = `Guest ${Math.floor(Math.random() * (100000 - 10000)) + 10000}`;
             try {
-                if (this._device.bowser === 'safari') {
+                if (this._device.os === 'ios') {
                     this._mediasoupDevice = new Device({ handlerName: 'Safari12' });
                 }
                 else {

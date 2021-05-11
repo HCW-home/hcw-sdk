@@ -1673,7 +1673,7 @@ export  class RoomService {
     try {
 
 
-      if (this._device.bowser === 'safari') {
+      if (this._device.os === 'ios') {
         this._mediasoupDevice = new mediasoupClient.Device({handlerName:'Safari12'});
       } else {
         this._mediasoupDevice = new mediasoupClient.Device();
