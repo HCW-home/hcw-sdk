@@ -1,6 +1,0 @@
-export class Peer {
-    constructor() {
-        this.streams = [];
-    }
-}
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicGVlci5qcyIsInNvdXJjZVJvb3QiOiJuZzovL2h1Zy1hbmd1bGFyLWxpYi8iLCJzb3VyY2VzIjpbImxpYi9wZWVyLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUNBLE1BQU0sT0FBTyxJQUFJO0lBQWpCO1FBRUUsWUFBTyxHQUFXLEVBQUUsQ0FBQTtJQUN0QixDQUFDO0NBQUEiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyBTdHJlYW0gfSBmcm9tICcuL3N0cmVhbSc7XG5leHBvcnQgY2xhc3MgUGVlciB7XG4gIGlkOiBzdHJpbmdcbiAgc3RyZWFtczogU3RyZWFtW109W11cbn1cbiJdfQ==
