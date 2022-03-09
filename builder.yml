@@ -1,0 +1,9 @@
+builder:
+- method: docker
+  options:
+    image: builder-npm
+publish:
+- method: local-folder
+  options:
+    target_path: npm
+    source_files: '*.tgz'

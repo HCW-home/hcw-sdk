@@ -28,7 +28,6 @@
     "rxjs": "^6.6.3",
     "sails.io.js": "^1.2.1",
     "socket.io-client": "^3.0.4",
-    "tslib": "^2.0.3",
     "wolfy87-eventemitter": "^5.2.9",
     "zone.js": "~0.10.2"
   },
